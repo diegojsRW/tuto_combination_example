@@ -1,0 +1,22 @@
+{
+  "name": "tuto_combination_example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.htm",
+  "scripts": {
+    "test": "electron index.htm",
+    "bundle": "browserify -o dist\\bundle.js index.js",
+    "start": "npm run bundle & npm run test"
+  },
+  "author": "Diego V. G. Silva",
+  "license": "ISC",
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "less": "^2.7.3",
+    "mathjax": "^2.7.2"
+  },
+  "devDependencies": {
+    "browserify": "^14.5.0",
+    "electron": "^1.7.9"
+  }
+}

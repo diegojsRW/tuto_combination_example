@@ -1,0 +1,443 @@
+@font-size: 2.2vw;//2.2vw;
+@arrow-size: 2.2vw;// unit(unit(@font-size) / sqrt(2), vw);                     //1.5
+
+
+.general-styling() {
+    /* GENERAL STYLING */
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: url("Bg.png") no-repeat;
+        background-size: cover;
+        overflow: hidden;
+        user-select: none;
+    }
+
+    ul, li {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+}
+.general-styling();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.main-and-sections(){
+    /* MAIN AND SECTIONS */
+    main, #MathJax_Message {
+        line-height: 1.18;
+        font-size: @font-size;
+        font-family: "Segoe UI Light";
+        text-shadow: 0px 0px 20px #000000;
+        color: #ffffff;
+    }
+    main {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    section {
+        margin: 1vw;
+    }
+    header, section, #MathJax_Message {
+        padding: 1vw;
+        background-color: rgba(0,0,0,0.75);
+    }
+    header {
+        font-weight: bold;
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+    }
+    header>h1 {
+        padding: 0;
+        margin: 0;
+        font-size: 100%;
+        order: -1;
+        &[lang="pt-br"]{
+            font-size: 60%;
+            order: unset;
+            &::after {
+                content: "";
+            }
+        }
+        &::after {
+            content: " / ";
+        }
+    }
+
+    #MathJax_Message {
+        position: static;
+        display: block !important;
+        border: 0;
+        &:empty::before {
+            content: "Ready.";
+            visibility: hidden;
+        }
+    }
+    section * {
+        transition: top 0.25s ease-in-out, 
+                    left 0.25s ease-in-out, 
+                    color 0.25s ease-in-out,
+                    background-color 0.25s ease-in-out,
+                    background 0.25s ease-in-out,
+                    text-shadow 0.25s ease-in-out,
+                    opacity 0.25s ease-in-out;
+    }
+}
+.main-and-sections();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* PERMUTATION LISTING CLASSES */
+.permutation-listing-classes() {
+    .letras>ul {
+        display: flex;
+        flex-direction: row;
+        position: relative;
+        justify-content: space-around;
+    }
+    .letras>div, .letras>div>div {
+        position: relative;
+    }
+
+    .letras>ul>li {
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        flex-grow: 1;
+        flex-direction: column;
+    }
+    // .letras>ul>li>span.number {
+    // }
+    .letras>ul>li>span.number.is-marked {
+        text-shadow: 0px 0px 10px #ffffff;
+        font-weight: 600;
+    }
+}
+.permutation-listing-classes();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.arrow-and-pointer-classes(){
+    @arrow-hypotenuse: sqrt(2 * pow(@arrow-size, 2));       //2.1213203435596424
+    @arrow-hypotenuse-half: @arrow-hypotenuse / 2;          //1.0606601717798212
+    @arrow-center: (@arrow-hypotenuse - @arrow-size) / 2;   //0.3106601717798212
+    @arrow-right: @arrow-center*2;                          //0.6213203435596424
+    @arrow-pos: @arrow-right - (@arrow-hypotenuse / 2);     //-0.4393398282201788
+    /* ARROW AND POINTERS CLASSES */
+
+    
+    div.arrow-container {
+        padding-top: @arrow-hypotenuse-half;//1.06066vw;
+        position: relative;
+        display: inline-block;
+    }
+    @arrow-color-bg: #004400;
+    @arrow-color-fg: #00ff00;
+
+    div.arrow-container>div.arrow-subcontainer {
+        position: relative;
+        display: flex;
+        background: @arrow-color-bg;
+        box-shadow: 0px 0px 10px @arrow-color-bg;
+        flex-direction: column;
+    }
+    div.arrow-subcontainer>span.arrow {
+        position: absolute;
+        border-left: 5px solid @arrow-color-fg;
+        border-top: 5px solid @arrow-color-fg;
+        background: @arrow-color-bg;
+        transform: rotateZ(45deg);
+        width: @arrow-size;
+        height: @arrow-size;
+        display: inline-block;
+        top: @arrow-center - @arrow-hypotenuse-half;//-0.62132vw;
+        left: @arrow-center;
+        outline: 1px solid transparent;
+    }
+    div.arrow-subcontainer>span.arrow-number {
+        font-size: @arrow-size/1.5;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        color: @arrow-color-fg;
+        text-shadow: 0px 0px 0px transparent;
+        z-index: 10;
+        width: @arrow-hypotenuse;
+        flex-direction: column;
+        position: relative; 
+        min-height: @arrow-hypotenuse-half;
+        justify-content: center;
+    }
+}
+.arrow-and-pointer-classes();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.arrow-style-define(@style-name, @arrow-color-fg, @arrow-color-bg){
+    .arrow-container.is-@{style-name} .arrow-subcontainer  {
+        background: @arrow-color-bg;
+        box-shadow: 0px 0px 10px @arrow-color-bg;
+    }
+    
+    .arrow-container.is-@{style-name} .arrow {
+        border-color: @arrow-color-fg;
+        background: @arrow-color-bg;
+    }
+    .arrow-container.is-@{style-name} .arrow-number {
+        color: @arrow-color-fg;
+    }
+}
+/* ARROW DUPLICATED PERMUTATION STYLE */
+.arrow-style-define(~"duplicate", #ff6600, #443300);
+/* ARROW REPEATED PERMUTATION STYLE */
+.arrow-style-define(~"repeated", #ff0000, #550000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.combinations-listing(){
+    .combinacoes>ul{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+    .combinacoes>ul>li{
+        display: inline-block;
+        padding-left: @font-size/2.0;
+        padding-right: @font-size/2.0;
+        animation: fadein 0.5s ease-in-out;
+    }
+    .combinacoes>ul:empty {
+        display: block;
+        text-align: center;
+        &::after {
+            content: "∅";
+        }
+    }
+}
+.combinations-listing();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.mathematic-styling() {
+    section.mathematic {
+        font-size: 60%;
+        flex-grow: 1;
+        display: flex;
+    }
+    section.mathematic>div {
+        position: relative;
+        flex-grow: 1;
+    }
+    div.mathematic {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        //flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .sumOfAP {
+    }
+    .notRevealed {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+
+    .coding {
+        background-color: rgba(39, 40, 34, 0.9);
+        display: inline-block;
+        padding: 1vw;
+        font-family: "Consolas";
+        border: 1px solid rgb(65, 67, 57);
+    }
+    .coding span[data-token1] {
+        color: #f92672;
+    }
+    .coding span[data-token2] {
+        color: #a6e22e;
+    }
+    .coding .line{
+        counter-increment: line-number;
+        &::before {
+            content: counter(line-number);
+            color: #cccccc;
+        }
+        .identations();
+
+        .identations(@i: 0) when (@i < 4) {
+            &[data-ident="@{i}"]::before{
+                padding-right: unit(1+@i, vw);
+            }
+            .identations(@i+1);
+        }
+    }
+
+    .permutationsSum>ul{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        flex-grow: 1;
+    }
+
+    .permutationsSum>ul>li { 
+        display: inline-flex;
+        flex-direction: row;
+        justify-content: center;
+        justify-items: center;
+        text-align: center;
+        flex-grow: 1;
+        animation: fadein 0.5s ease-in-out;
+    }
+    .permutationsSum>ul>li>div {  //container do li
+       display: inline-block;
+       flex-grow: 1;
+    }
+    .permutationsSum>ul>li:after {
+        content: "+";
+        display: inline-flex;
+        justify-content: center;
+        flex-direction: column;
+        flex-grow: 1;
+        font-size: 166.6%;
+    }
+    .permutationsSum>ul>li:last-child:after {
+        content: "";
+        display: none;
+    }
+    .permutationsSum>ul>li>div>div { //número da soma
+        // text-align: center;
+        font-size: 166.6%;
+    }
+    .permutationsSum>ul>li>div>ul {
+        display: flex;
+        justify-content: space-around;
+    }
+    .permutationsSum>ul>li>div>ul>li { //letras
+    }
+}
+.mathematic-styling();
+
+
+
+
+
+
+
+
+
+
+
+
+
+.css-animations-and-transitions(){
+
+    @keyframes fadein {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+}
+.css-animations-and-transitions();

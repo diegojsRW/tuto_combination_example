@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Exemplo de combinação</title>
+    <script src="dist/bundle.js"></script>
+    <script src="node_modules/mathjax/MathJax.js">
+    MathJax.Message.div = document.createElement("div");
+    </script>
+    <link rel="stylesheet/less" type="text/css" href="index.less">
+    <script src="node_modules/less/dist/less.min.js"></script>
+</head>
+<body>
+    <main>
+        <header>
+            <h1 lang="pt-br">Exemplo de combinação</h1>
+            <h1 lang="en-us">Combination example</h1>
+        </header>
+        <section class="letras">
+            <ul></ul>
+            <div></div>
+        </section>
+        <section class="combinacoes">
+            <ul></ul>
+        </section>
+        <section class="mathematic" id="mathematicSection">
+            <div>
+                <div class="mathematic permutationsSum"></div>
+                <div class="mathematic sumOfAP notRevealed">
+                    \[\sum{AP(First,Last,[Step=1])} = {{Length(AP) \times (First + Last)} \over {2}}\]
+                </div>
+                <div class="mathematic sumAnswer notRevealed">
+                    \[\sum{AP(First,Last,Step)} = {{Length \times (First + Last)}\over{2}} = Answer\]
+                </div>
+                <div class="mathematic notRevealed">
+                    <div class="coding">
+                        <div class="line" data-ident=0><span data-token1>loop</span>(<span data-token2>[#1]</span> <span data-token1>from</span> 1 <span data-token1>to</span> N-1){</div>
+                        <div class="line" data-ident=1><span data-token1>loop</span>(<span data-token2>[#2]</span> <span data-token1>from</span> <span data-token2>[#1]</span>+1 <span data-token1>to</span> N){</div>
+                        <div class="line" data-ident=2>[...]</div>
+                        <div class="line" data-ident=1>}</div>
+                        <div class="line" data-ident=0>}</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="MathJax_Message"> </section>
+    </main>
+</body>
+</html>
