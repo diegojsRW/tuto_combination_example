@@ -25,6 +25,7 @@ By default -- when `n` was not informed, or it is an invalid number, `n=6`.
 |:-------:|:--:|:-----------:|-----------
 |n|number|6|Letter count
 |p|number|2|Arrow count
+|z|number|100|Zoom (%)
 
 ### Keyboard Shortcuts
 | Key |Function
@@ -68,16 +69,17 @@ Contains styles, grouped into mixins, for the page elements. Some values are adj
 * @font-size: Font size of page elements.
 * @arrow-size: size of indicator arrows.
 
-### index.js
-Besides the two constants that declares jQuery in local scope (`const $ = require("jquery"), jQuery = $;`), there are 4 constants of main objects:
-#### permuteList
+### main.js
+Entry point of program. Calls for `app.doInit()`.
+
+### permute-list.js
 Contains definition of alphabetic letter count, as well as vector initialization holding such letters. For each letter a `li` is created on `.letras>ul`.
  
-#### permutator
+### permutator.js
 Contains the creation of arrows, the updating of their positions, the permutiation logic, as well as the logic for finding valid combinations.
 
-#### mathematical
-Contains MathJax configuration, initialization of mathematic equations which are on `div.mathematic`, forwarding of presentation, as well as  calling to `Typeset` of MathJax.
+### mathematical.js
+Contains MathJax configuration, initialization of mathematic equations on `div.mathematic`, forwarding of presentation, as well as calling to `Typeset` of MathJax.
 
-#### app
-Contains the calling of inicialization of those three classes above, as well as the definition of global scope for the purpose of debugging, and handling of events `$(document).ready`, `$(document).keydown` and `$(window).resize`.
+### app.js
+Contains the calling of inicialization of those three modules above, jQuery, put-selector, as well as the handling of events `$(document).ready`, `$(document).keydown` and `$(window).resize`.

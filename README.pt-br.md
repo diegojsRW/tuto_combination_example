@@ -25,6 +25,7 @@ Por padrão -- caso `n` não for informado, ou for um número inválido, `n=6`.
 |:-------:|:--:|:----------:|---------
 |n|número|6|Quantidade de letras
 |p|número|2|Quantidade de ponteiros
+|z|number|100|Zoom (%)
 
 ### Atalhos de teclado
 |Tecla|Função
@@ -68,16 +69,17 @@ Possui os estilos, divididos em mixins, para os elementos da página. Alguns par
 * @font-size: Tamanho da fonte dos elementos da página.
 * @arrow-size: Tamanho das setas indicadoras.
 
-### index.js
-Além de duas constantes que declaram o jQuery no escopo local (`const $ = require("jquery"), jQuery = $;`), possui 4 constantes de objetos principais:
-#### permuteList
+### main.js
+Ponto de entrada do programa. Chama `app.doInit()`.
+
+### permute-list.js
 Contém a definição da quantidade de letras alfabéticas, bem como a inicialização de um vetor contendo tais letras. Para cada letra é criado um elemento `li` em `.letras>ul`.
  
-#### permutator
+### permutator.js
 Contém a criação das setas, a atualização da posição das mesmas, a lógica para permutação, bem como a lógica para encontrar combinações válidas.
 
-#### mathematical
+### mathematical.js
 Contém a configuração do MathJax, a inicialização dos valores das equações em `div.mathematic`, o avanço da apresentação, bem como a chamada do `Typeset` do MathJax.
 
-#### app
-Contém a chamada para inicialização das três classes anteriores, bem como a definição do escopo global para debugging e manipulação dos eventos `$(document).ready`, `$(document).keydown` e `$(window).resize`.
+### app.js
+Contém a chamada para inicialização dos três modulos anteriores, jQuery, put-selector, bem como a manipulação dos eventos `$(document).ready`, `$(document).keydown` e `$(window).resize`.

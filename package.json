@@ -1,11 +1,11 @@
 {
   "name": "tuto_combination_example",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "",
   "main": "index.htm",
   "scripts": {
     "test": "electron index.htm",
-    "bundle": "browserify -o dist\\bundle.js -d index.js",
+    "bundle": "browserify -o dist\\bundle.js -d js\\main.js",
     "start": "npm run bundle & npm run test"
   },
   "author": "Diego V. G. Silva",
