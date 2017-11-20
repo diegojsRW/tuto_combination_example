@@ -4,6 +4,11 @@ const
     jQuery = require("jquery"),
     $ = jQuery;
     // lesscss = require("./node_modules/less/dist/less.min");
+
+/** @type {(...args: any)=>HTMLElement} */
+const
+    ps = require("./put-selector-browserified")();
+
 /**
  * @typedef PointElm
  * @prop {number} index
@@ -15,22 +20,9 @@ const
 
 const permutator = {
     description: "Combinations",
-    points: Array(2).fill(0).map((_,i)=>{
-        return {
-            index: 0, 
-            numeric: i,
-            DOMElement: $(`
-    <div>
-        <div class="arrow-container">
-            <div class="arrow-subcontainer">
-                <span class="arrow"></span>
-                <span class="arrow-number">#${1+i}</span>
-            </div>
-        </div>
-    </div>`),
-            DOMContainer: null
-        };
-    }),
+    count: 2,
+    /** @type {PointElm[]} */
+    points: null,
 
     /**
      * @param {PointElm} pointer 
@@ -38,17 +30,13 @@ const permutator = {
     updatePointPosition: (pointer)=>{
         let li = $(".letras>ul>li").eq(pointer.index);
         let elm = $(pointer.DOMElement).find(".arrow-container");
-        // let pelm = elm.prev(".arrow-container");
-        let x;
-        x = (li.position().left + (li.width()/2)) - (elm.width() / 2);
-        // if(pelm.get(0))
-        //     x = pelm.outerWidth() + pelm.position().left;
-        // else   
-        //     x = li.children().last().outerWidth()
+        let x = (li.position().left + (li.width()/2)) - (elm.width() / 2);
         elm.css({
-            // top: `${y}px`,
             left: `${x}px`
         });
+    },
+    updatePoints: _=>{
+        permutator.points.forEach(pointer=>permutator.updatePointPosition(pointer));
     },
     checkCombination: _=>{
         let currentCombination = permutator.points.map(pointer=>{
@@ -69,13 +57,14 @@ const permutator = {
             return testCombination.length == 0;
         });
         
-        let duplicate = [...new Set(currentCombination)].length == 1;
+        let duplicate = [...new Set(currentCombination)].length < currentCombination.length;
         let repeated = (matches.length > 0);
-        $(".arrow-container").toggleClass("is-duplicate", duplicate);
-        $(".arrow-container").toggleClass("is-repeated", repeated);
+        $(".arrow-container").toggleClass("is-duplicate", duplicate); //E.g.: AA, BB, CC, AAB
+        $(".arrow-container").toggleClass("is-repeated", repeated);   //already exists on list, e.g.: BA and AB
 
         if(matches.length == 0 && !duplicate){
-            $(".combinacoes>ul").append(`<li>${currentCombination.join("")}</li>`);   
+            // $(".combinacoes>ul").append(`<li>${currentCombination.join("")}</li>`);   
+            ps($(".combinacoes>ul")[0], "li", currentCombination.join(""));   
             mathematical.updateSum();         
         }
         return {duplicated: duplicate, repeated: repeated, issue: duplicate||repeated};
@@ -91,13 +80,36 @@ const permutator = {
             return prev;
         }, false);
     },
-    permutate: _=>{
-        if(!permutator.doPermutation(true,true))
+    permutate: (change=true,update=true)=>{
+        if(!permutator.doPermutation(change,update))
             $(".combinacoes>ul").empty();
         return permutator.checkCombination();
     },
     next: ()=>{permutator.permutate();},
     initialize: _=>{
+        if(app.argv.p) {
+            app.argv.p = Math.max(parseInt(app.argv.p),1);
+            permutator.count = app.argv.p || permutator.count;
+        }
+
+        permutator.points = Array(permutator.count).fill(0).map((_,i)=>{
+            return {
+                index: 0, 
+                numeric: i,
+                DOMElement: $(`
+                <div>
+                    <div class="arrow-container">
+                        <div class="arrow-subcontainer">
+                            <span class="arrow"></span>
+                            <span class="arrow-number">#${1+i}</span>
+                        </div>
+                    </div>
+                </div>`),
+                DOMContainer: null
+            };
+        });
+
+
         permutator.points.forEach(pointer=>{
             $(".letras>div").append(pointer.DOMElement);
             permutator.updatePointPosition(pointer);
@@ -109,39 +121,69 @@ const permutator = {
 permuteList = {
     count: 6,
     initialize: _=>{
-        if(app.argv.n)
-            permuteList.count = parseInt(app.argv.n) || permuteList.count;
+        if(app.argv.n){
+            app.argv.n = Math.max(parseInt(app.argv.n), 2);
+            permuteList.count = app.argv.n || permuteList.count;
+        }
+
         Array(permuteList.count).fill(0).map((_,i)=>{return String.fromCharCode("A".charCodeAt() + i);}).forEach(item=>{
-            $(".letras>ul").append(`<li><span class="number">${item}</span></li>`);
+            // $(".letras>ul").append(`<li><span class="number">${item}</span></li>`);
+            ps($(".letras>ul")[0], "li>span.number", item);
         });    
     }
 },
 mathematical = {
     description: "Math presentation",
-    current: 1,
+    current: 0,
     initialize: function(){
-        let sumOfAP = $("div.mathematic");
-        let r = {
-            first: 1,
-            last: permuteList.count-1,
-            step: 1,
-            length: permuteList.count-1,
-            answer: 0
-        };
-        let equationDiv = $(".sumAnswer");
-        r.answer = r.length * (r.first + r.last) / 2;
+        let mathSection = $("div.mathematic:first").parent()[0];
         
-        let t = equationDiv.text();
+        ps(mathSection, "div.mathematic", `\\[\\prod_{i=1}^{p} {{n-i+1} \\over i}\\]`);
         
-        Object.keys(r).forEach(key=>{
-            /** @type { number } */
-            let val = r[key];
-            t = t.replace(new RegExp(key, "gi"), val.toString());
+        let mathvars = {p: permutator.count, n: permuteList.count};
+        let tmpN = [], tmpD = []; 
+        Array(mathvars.p).fill(0).map((_,_i)=>{
+            let i = _i+1;
+            let frn = mathvars.n - i + 1;
+            let frd = i; 
+            if(frn != 1) tmpN.push(frn);
+            if(frd != 1) tmpD.push(i);
         });
+        let resolveMathvars = expr=>{
+            Object.keys(mathvars).forEach(v=>{
+                expr = expr.replace(new RegExp("\\$" + v,"gi"), mathvars[v]);
+            });
+            return expr;
+        };
+        ps(mathSection, "div.mathematic", resolveMathvars(`\\[\\prod_{i=1}^{$p} {{$n-i+1} \\over i}\\]`));
+    
+        ps(mathSection, "div.mathematic", `\\[{{${tmpN.join(" \\times ")}} \\over {${tmpD.join(" \\times ")}}}\\]`);
+        ps(mathSection, "div.mathematic", `\\[  ({ {n!} \\over {(n-p)!} }) \\over {p!}     \\]`);
+        ps(mathSection, "div.mathematic", `\\[  {n!} \\over {(n-p)! \\times p!}     \\]`);
+        ps(mathSection, "div.mathematic", resolveMathvars(`\\[  {$n!} \\over {($n-$p)! \\times $p!}     \\]`));
+        mathvars._n_p = mathvars.n - mathvars.p;
+        ps(mathSection, "div.mathematic", resolveMathvars(`\\[  {$n!} \\over {$_n_p! \\times $p!}     \\]`));
 
-        equationDiv.text(t);
+        ps(mathSection, "div.mathematic", `\\[{{${tmpN.join(" \\times ")}} \\over {${tmpD.join(" \\times ")}}}\\]`);
+        tmpD = tmpD.filter(i => {
+            let ik = tmpN.indexOf(i);
+            if(ik >= 0)
+                tmpN.splice(ik, 1);
+            return ik < 0;
+        });
+        ps(mathSection, "div.mathematic", `\\[{{${tmpN.join(" \\times ")}} \\over {${tmpD.join(" \\times ")}}}\\]`);
+        mathvars._nm1 = mathvars.n - 1;
+        ps(mathSection, "div.mathematic", resolveMathvars(`\\[ {$_nm1 ($_nm1 + 1)} \\over 2 \\]`));
+        ps(mathSection, "div.mathematic", `\\[\\sum{AP(First,Last,[Step=1])} = {{Length(AP) \\times (First + Last)} \\over {2}}\\]`);
+        ps(mathSection, "div.mathematic", resolveMathvars(`\\[\\sum{AP(1,$_nm1,1)} = {{$_nm1 \\times (1 + $_nm1)}\\over{2}}\\]`));
+        mathematical.next(); 
 
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub, sumOfAP.get()]);
+
+
+        mathematical.current = 1;
+        // $("section.mathematic");
+
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, mathSection]);
     },
     initMathjax: _=>{
         MathJax.Hub.Config({
@@ -177,7 +219,8 @@ mathematical = {
     updateSum: _=>{
         let permutations = $(".combinacoes>ul>li").get().map(e=>e.innerText);
         
-        let domList = $("<ul></ul>").appendTo($(".permutationsSum").empty());
+        // let domList = $("<ul></ul>").appendTo($(".permutationsSum").empty());
+        let domList = ps($(".permutationsSum").empty()[0], "ul");
 
         /** @type {String[]} */
         let permutationSum = Object.entries(permutations.reduce(/** @param {[]} s @param {String} p **/(s,p)=>{
@@ -187,18 +230,19 @@ mathematical = {
             let [g, c] = e;
             let gl = permutations.filter(p=>p[0] === g);
             
-            let domListItem = $("<div></div>").appendTo($("<li></li>").appendTo(domList));
+            let domListItem = ps(domList, "li", "", "div");
+        
+            ps(domListItem, "div", c);
+
+            let domGroupPermList = ps(domListItem, "ul");
             
-            $("<div></div>").appendTo(domListItem).text(c);
-            
-            let domGroupPermList = $("<ul></ul>").appendTo(domListItem);
             gl.forEach(perm=>{
-                $("<li></li>").appendTo(domGroupPermList).text(perm);
+                ps(domGroupPermList, "li", perm);
             });
-            s.push(`${c}: ${gl}`);
+            s.push([c, gl]);
             return s;
         }, []);
-
+        ps(domList, "li", "", "div", "", "div", permutationSum.reduce((s,p)=>s+p[0], 0));
         console.log(permutationSum);
     }
 
@@ -224,11 +268,17 @@ app = {
             MathJax.Message.Set(`<Enter now skips ${app.skippers[app.skipping].description}>`, null, 1000);
         
         }
-        if(evt.key === "f"){ 
+        if(evt.key.toLowerCase() === "f"){ 
             let permutimer = function(){
-                if(permutator.permutate().issue)
-                setTimeout(permutimer, 50);
+                let it = 0;
+                while(permutator.permutate(true,false).issue)
+                    if(it++ > 1000) 
+                        return console.warn("Giving up...");
+                // if(permutator.permutate(true,false).issue)
                 // requestAnimationFrame(permutimer)
+                // setTimeout(permutimer, 50);
+                
+                permutator.updatePoints();
             };
             permutimer();
         };
@@ -237,24 +287,30 @@ app = {
         }
     },
     onResized: _=>{
-        permutator.points.forEach(pointer=>permutator.updatePointPosition(pointer));
+        permutator.updatePoints();//.forEach(pointer=>permutator.updatePointPosition(pointer));
     },
     onReady: function(){
+        if(app.argv.z)
+            less.modifyVars({
+                "@font-size": (2.2 * (app.argv.z / 100)).toFixed(2) + "vw" 
+            });
+
         [permuteList, permutator, mathematical].forEach(x=>x.initialize());      
         $(document).on("keydown", app.onKeyDown);
         $(window).resize(app.onResized);
         $(".letras, .combinacoes").click(permutator.next);
         $("section.mathematic").click(mathematical.next);
+
         mathematical.initMathjax();
     },
     doinit: function(){
         app.argv = document.location.search.slice(1).split("&").reduce((ps,p)=>{ let [k,v] = p.split("="); ps[k] = v; return ps; },{});
-        //less.watch();
-        jQuery.fn.reverse = [].reverse;
         
+        jQuery.fn.reverse = [].reverse;
         
         window.$ = $;
         window.JQuery = $;
+        window.ps = ps;
         window.permutator = permutator;
         window.mathematical = mathematical;
         window.permuteList = permuteList;

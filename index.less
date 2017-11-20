@@ -1,5 +1,5 @@
 @font-size: 2.2vw;//2.2vw;
-@arrow-size: 2.2vw;// unit(unit(@font-size) / sqrt(2), vw);                     //1.5
+@arrow-size: @font-size;// unit(unit(@font-size) / sqrt(2), vw);                     //1.5
 
 
 .general-styling() {
@@ -104,6 +104,27 @@
                     background 0.25s ease-in-out,
                     text-shadow 0.25s ease-in-out,
                     opacity 0.25s ease-in-out;
+    }
+    .fork {
+        font-family: 'Collegiati';
+        text-decoration: none;
+        font-size: 12pt;
+        padding: 4pt 50pt;// 5pt 0pt;
+        transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        transform:  translate(30%,170%) rotate(45deg) scale(1);
+        text-shadow: 0 0 10px #000000, 0 0 10px #000000; 
+        transform-origin: 50% 50%;
+        background: url("dist/octocat_outline.png") 20% 50%/auto 12pt no-repeat, rgba(109,109,109,1);
+        opacity: 0.6;
+        border: 2px dashed rgb(161,161,161);
+        position: fixed;
+        top: 0;
+        right: 0;
+        color: #ffffff;
+    }
+    .fork:hover {
+        transform:  translate(30%,170%) rotate(45deg) scale(1.2);
+        opacity: 1;
     }
 }
 .main-and-sections();
@@ -389,8 +410,10 @@
         animation: fadein 0.5s ease-in-out;
     }
     .permutationsSum>ul>li>div {  //container do li
-       display: inline-block;
+       display: inline-flex;
        flex-grow: 1;
+       flex-direction: column;
+       justify-content: center;
     }
     .permutationsSum>ul>li:after {
         content: "+";
@@ -400,7 +423,12 @@
         flex-grow: 1;
         font-size: 166.6%;
     }
-    .permutationsSum>ul>li:last-child:after {
+    
+    .permutationsSum>ul>li:nth-last-child(2):after {
+        content: "=";
+    }
+    
+    .permutationsSum>ul>li:nth-last-child(1):after {
         content: "";
         display: none;
     }
@@ -438,6 +466,13 @@
         100% {
             opacity: 1;
         }
+    }
+
+    @font-face {
+        font-family: 'Collegiati';
+        src: url("dist/collegiate-webfont.woff") format("woff"),
+            url("dist/collegiate-webfont.ttf") format("truetype");//,
+            // local("Collegiate");
     }
 }
 .css-animations-and-transitions();
