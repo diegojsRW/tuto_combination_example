@@ -8,7 +8,7 @@
 [TOC]
 
 ## Goal
-This project was first developed to exemplify exclusive combinations in video [**"Slime Rancher - Combining Largos and programming"**](https://youtu.be/undefined). 
+This project was first developed to exemplify exclusive combinations in video [**"Slime Rancher - Combining Largos and programming"**](https://youtu.be/A54Q7IQ9XHI). 
 
 ## Theoretical introduction
 A combination is every subset whose elements results from permutations between the elements from a set, so that there is no repetition of those elements. The order of elements doesn't matter.

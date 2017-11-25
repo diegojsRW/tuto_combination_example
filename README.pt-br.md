@@ -8,7 +8,7 @@
 [TOC]
 
 ## Objetivo
-Este projeto foi primeiramente desenvolvido para utilização na exemplificação de combinações exclusivas no vídeo [**"Slime Rancher - Combinando Largos e programação"**](https://youtu.be/undefined). 
+Este projeto foi primeiramente desenvolvido para utilização na exemplificação de combinações exclusivas no vídeo [**"Slime Rancher - Combinando Largos e programação"**](https://youtu.be/A54Q7IQ9XHI). 
 
 ## Introdução teórica
 Uma combinação é todo subconjunto cujos elementos são resultado de permutações entre os elementos de um conjunto de forma que não haja repetição desses elementos. Em outras palavras: a ordem dos elementos não importa.
